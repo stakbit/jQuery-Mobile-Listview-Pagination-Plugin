@@ -1,0 +1,57 @@
+# jQuery-Mobile-Listomatic-Plugin
+
+Plugin to provide jquery mobile listview pagination
+
+
+## How to Use
+
+
+Include the plugin after the jquery mobile plugin: 
+
+<script type="text/javascript" src="<Path To This File>/jquery.mobile.listomatic.js"></script> 
+
+Add the data-listomatic="true" attribute to your list. 
+
+<pre>
+<ul id="listview" data-role="listview" data-filter="true" data-filter-placeholder="Search..." data-listomatic="true" data-theme="a" >
+</ul>
+</pre>
+
+Now register and Ajax call:
+
+<pre>
+$(document).on("pageinit", function(){
+     var getNumber = function() {
+        return $.ajax({
+                type: "post",
+                beforeSend: function() { $.mobile.loading( 'show' ) }, //Show spinner
+                complete: function() { $.mobile.loading( 'hide' ) }, //Hide spinner
+                async: "true", 
+                dataType: 'json',
+                url: serviceURL,
+		data: { listomatic: $.mobile.listomatic.prototype.getResults() },       
+                success: function(data) {
+               if (data) { 
+                	var template = $('#numbers-template').html();
+        		    var list = Mustache.to_html(template, data);
+        		    $('#listview').append(list).listview("refresh");
+               }
+                }
+         });
+    }
+	$.extend($.mobile.listomatic.prototype.options, {perPage: 5, btnLabel: 'Show Me More', refreshContent: 'daily'});
+	$.mobile.listomatic.prototype.registerAjaxCall(getNumber);
+
+
+    	
+   	});
+</pre>
+
+
+
+# License
+
+Author & copyright (c) 2012: [Tim Svensen](http://timsvensen.com)
+
+Dual MIT & GPLv2 license
+
