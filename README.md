@@ -6,15 +6,11 @@ Plugin to provide jquery mobile listview pagination
 
 Include the plugin after the jquery mobile plugin: 
 
-<pre>
-<script type="text/javascript" src="<Path To This File>/jquery.mobile.listomatic.js"></script> 
-</pre>
+`<script type="text/javascript" src="<Path To This File>/jquery.mobile.listomatic.js"></script>`
 
 Add the data-listomatic attribute to your ul list.
 
-<pre>
-<ul data-role="listview" data-filter="true" data-listomatic="true"></ul>
-</pre>
+`<ul data-role="listview" data-filter="true" data-listomatic="true"></ul>`
 
 # Register an Ajax function
 
