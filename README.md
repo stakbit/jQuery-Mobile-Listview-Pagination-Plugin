@@ -1,24 +1,24 @@
-# jQuery-Mobile-Listomatic-Plugin
+# jQuery Mobile Listomatic Plugin
 
 Plugin to provide jquery mobile listview pagination
-
 
 ## How to Use
 
 Include the plugin after the jquery mobile plugin: 
 
+<pre>
 <script type="text/javascript" src="<Path To This File>/jquery.mobile.listomatic.js"></script> 
+</pre>
 
-Add the data-listomatic="true" attribute to your ul with data-role="listview". 
+Add the data-listomatic attribute to your ul list.
 
 <pre>
-<ul id="listview" data-role="listview" data-filter="true" data-filter-placeholder="Search..." data-listomatic="true" data-theme="a" >
-</ul>
+<ul data-role="listview" data-filter="true" data-listomatic="true"></ul>
 </pre>
 
 # Register an Ajax function
 
-Register the ajax function that will be called every time the "Show More" button is clicked or tapped on or when a Search is performed.
+Register an ajax function that will be called every time the "Show More" button is clicked or tapped on or when a Search is performed.
 
 <pre>
 var getNumber = function() {
@@ -45,12 +45,10 @@ $.mobile.listomatic.prototype.registerAjaxCall(getNumber);
 
 #Server Side Pagination
 
-For each ajax call there will be several paramters that will need to be hooked on your sql query.
-
-Here's an example PHP code.
+For each ajax call there will be several paramaters that will need to be hooked on to the sql query on the server side.
 
 <pre>
-$perPage = $_REQUEST['listomatic']['perPage'];
+$perPage    = $_REQUEST['listomatic']['perPage'];
 $listOffset = $_REQUEST['listomatic']['listOffset'];
 $searchTerm = $_REQUEST['listomatic']['searchTerm'];
 
@@ -74,4 +72,3 @@ $.extend($.mobile.listomatic.prototype.options, {perPage: 5, btnLabel: 'Show Me 
 Author & copyright (c) 2013: [Stakbit](http://www.stakbit.com)
 
 Released under the MIT license.
-
