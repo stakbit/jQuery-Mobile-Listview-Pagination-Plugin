@@ -14,7 +14,7 @@ Add the "data-listomatic" attribute to your ul list with a value of "true". You 
 
 `<ul id="listview" data-role="listview" data-filter="true" data-listomatic="true"></ul>`
 
-The Listomatic will take care of the rest, including setting sensible defaults (ie, 10 records per page, remembering state and caching where appropriate to speed up the UI.
+The Listomatic plugin will take care of the rest, including setting sensible defaults (ie, 10 records per page, remembering state (ie, list offsets) and caching where appropriate for a great user experience.
 
 # Register an Ajax Function
 
@@ -47,7 +47,7 @@ $.mobile.listomatic.prototype.registerAjaxCall(getNumber);
 
 #Server Side Configuration To Enable Pagination
 
-For each Ajax call there will be several paramaters that will need to be hooked on to the sql query on the server side.
+For each Ajax call there will be several paramaters that will need to be hooked on to the sql query on the server side to allow for pagination by only getting a subset of records, one at a time.
 
 <pre>
 $perPage    = $_REQUEST['listomatic']['perPage'];
@@ -55,20 +55,23 @@ $listOffset = $_REQUEST['listomatic']['listOffset'];
 $searchTerm = $_REQUEST['listomatic']['searchTerm'];
 
 if ($searchTerm) {
-	$sql = "SELECT * FROM yourTable WHERE date LIKE '%$searchTerm%' ORDER BY date DESC LIMIT $listOffset, $perPage";
+	$sql = "SELECT * FROM yourTable 
+	WHERE date LIKE '%$searchTerm%' 
+	ORDER BY date DESC LIMIT $listOffset, $perPage";
 	$result = mysqli_query($con, $sql);
 } else {
-	$sql = "SELECT * FROM yourTable ORDER BY date DESC LIMIT $listOffset, $perPage";
+	$sql = "SELECT * FROM yourTable 
+	ORDER BY date DESC LIMIT $listOffset, $perPage";
 	$result = mysqli_query($con,$sql);
 }	
 </pre>
 
 #Configuration 
 
-The Listomatic plugin will set some default settings that can be overrideen, such as number of records to return (perPage), label for "Show More" button (btnLabel) and option ot refresh content (if set to false the page will not refresh, if true the page will refresh at midnight). 
+The Listomatic plugin will set some default settings that can be overwritten, such as number of records to return per call (perPage), label text for the "Show More" button (btnLabel) and an option to refresh content (refreshContent), if set to 'false' the page will not refresh, if set to 'true' the page will refresh at midnight. 
 
 <pre>
-$.extend($.mobile.listomatic.prototype.options, {perPage: 5, btnLabel: 'Show Me More', refreshContent: 'daily'});
+$.extend($.mobile.listomatic.prototype.options, {perPage: 5, btnLabel: 'Show Me More', refreshContent: true});
 </pre>
 
 # License
