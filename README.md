@@ -1,22 +1,27 @@
-# jQuery Mobile Listomatic Plugin
+# jQuery Mobile Listview Pagination Plugin (aptly named  Listomatic)
 
 Plugin to provide jquery mobile listview pagination
 
-## How to Use
+## How To Use
 
-Include the plugin after the jquery mobile plugin: 
+First download the Listomatic plugin (jquery.mobile.listomatic.js)
+
+Include the Listomatic plugin after the jquery mobile library: 
 
 `<script type="text/javascript" src="<Path To This File>/jquery.mobile.listomatic.js"></script>`
 
-Add the data-listomatic attribute to your ul list.
+Add the "data-listomatic" attribute to your ul list with a value of "true". You can also add the search box by adding the "data-filter" attribute with a value of "true".
 
-`<ul data-role="listview" data-filter="true" data-listomatic="true"></ul>`
+`<ul id="listview" data-role="listview" data-filter="true" data-listomatic="true"></ul>`
 
-# Register an Ajax function
+The Listomatic will take care of the rest, including setting sensible defaults (ie, 10 records per page, remembering state and caching where appropriate to speed up the UI.
 
-Register an ajax function that will be called every time the "Show More" button is clicked or tapped on or when a Search is performed.
+# Register an Ajax Function
+
+Register an Ajax function that will be called every time the "Show More" button is clicked or tapped on or when a "Search" is performed.
 
 <pre>
+// the Ajax request to register
 var getNumber = function() {
 	return $.ajax({
 		type: "post",
@@ -36,12 +41,13 @@ var getNumber = function() {
 	});
 }
 
+// the actual registration of the plugin
 $.mobile.listomatic.prototype.registerAjaxCall(getNumber);
 </pre>
 
-#Server Side Pagination
+#Server Side Configuration To Enable Pagination
 
-For each ajax call there will be several paramaters that will need to be hooked on to the sql query on the server side.
+For each Ajax call there will be several paramaters that will need to be hooked on to the sql query on the server side.
 
 <pre>
 $perPage    = $_REQUEST['listomatic']['perPage'];
@@ -57,7 +63,9 @@ if ($searchTerm) {
 }	
 </pre>
 
-#Configuration
+#Configuration 
+
+The Listomatic plugin will set some default settings that can be overrideen, such as number of records to return (perPage), label for "Show More" button (btnLabel) and option ot refresh content (if set to false the page will not refresh, if true the page will refresh at midnight). 
 
 <pre>
 $.extend($.mobile.listomatic.prototype.options, {perPage: 5, btnLabel: 'Show Me More', refreshContent: 'daily'});
