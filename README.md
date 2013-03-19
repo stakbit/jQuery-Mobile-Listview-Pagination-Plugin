@@ -1,6 +1,6 @@
 # jQuery Mobile Listview Pagination Plugin (aptly named  Listomatic)
 
-Plugin to provide jquery mobile listview pagination
+Plugin to provide jquery mobile listview pagination. Try the demo at http://listomatic.stakbit.com/
 
 ## How To Use
 
