@@ -33,10 +33,11 @@ var getNumber = function() {
 		complete: function() { $.mobile.loading( 'hide' ) }, //Hide spinner
 		async: "true", 
 		dataType: 'json',
-		url: serviceURL,
+		url: http://www.your-domain.com/return-list.php, // Obviously, point to your domain and file
 		data: { listomatic: $.mobile.listomatic.prototype.getResults() },       
 		success: function(data) {
 			if (data) { 
+				// Mustache is not required - https://github.com/stakbit/jQuery-Mobile-Listview-Pagination-Plugin/issues/1
 				var template = $('#numbers-template').html();
 				var list = Mustache.to_html(template, data);
 				$('#listview').append(list).listview("refresh");
@@ -67,7 +68,19 @@ if ($searchTerm) {
 	$sql = "SELECT * FROM yourTable 
 	ORDER BY date DESC LIMIT $listOffset, $perPage";
 	$result = mysqli_query($con,$sql);
-}	
+}
+
+while($row = mysqli_fetch_array($result)) {
+	$aData['numbers'][] = array('date' => $row['date'] , 
+				     'number' => array(1 => $row['num1'],
+							2 => $row['num2'],
+							3 => $row['num3'],
+							4 => $row['num4'],
+							5 => $row['num5'],
+							6 => $row['num6']));
+}
+echo json_encode($aData);
+exit;
 </pre>
 
 #Configuration 
