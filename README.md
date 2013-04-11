@@ -52,8 +52,8 @@ $(document).on("pageinit", function(){
 								'&lt;p style="text-align:center;" class="latestNumberDate">' + value.date + '&lt;/p>' +
 								'&lt;/li>';
 					}); // end each	
+					$('#listview').append(list).listview("refresh");
 				} // end if
-				$('#listview').append(list).listview("refresh");
 			} // end success
 		}); // end ajax
 	}
