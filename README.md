@@ -25,30 +25,44 @@ The Listomatic plugin will take care of the rest, including setting sensible def
 Register an Ajax function that will be called every time the "Show More" button is clicked or tapped on or when a "Search" is performed.
 
 <pre>
-// the Ajax request to register
-var getNumber = function() {
-	return $.ajax({
-		type: "post",
-		beforeSend: function() { $.mobile.loading( 'show' ) }, //Show spinner
-		complete: function() { $.mobile.loading( 'hide' ) }, //Hide spinner
-		async: "true", 
-		dataType: 'json',
-		url: http://www.your-domain.com/return-list.php, // Obviously, point to your domain and file
-		data: { listomatic: $.mobile.listomatic.prototype.getResults() },       
-		success: function(data) {
-			if (data) { 
-				// Mustache is not required - https://github.com/stakbit/jQuery-Mobile-Listview-Pagination-Plugin/issues/1
-				var template = $('#numbers-template').html();
-				var list = Mustache.to_html(template, data);
+$(document).on("pageinit", function(){
+	var serviceURL = "http://www.your-domain.com/returns-json-numbers.php";	
+	var getNumber = function() {
+		return $.ajax({
+			type: "post",
+			beforeSend: function() { $.mobile.loading( 'show' ) }, //Show spinner
+			complete: function() { $.mobile.loading( 'hide' ) }, //Hide spinner
+			async: "true",
+			dataType: 'json',
+			url: serviceURL,
+			data: { listomatic: $.mobile.listomatic.prototype.getResults() },
+			success: function(data) {
+				if (data.numbers) {
+					var list = '';
+					$.each(data.numbers, function(index, value) {
+						list += '&lt;li data-icon="false" data-filtertext="' + value.date + '">' +
+								'&lt;div class="latestNumber">' +
+								'&lt;span class="circle">' + value.number[1] + '&lt;/span>' +
+								'&lt;span class="circle">' + value.number[2] + '&lt;/span>' +
+								'&lt;span class="circle">' + value.number[3] + '&lt;/span>' +
+								'&lt;span class="circle">' + value.number[4] + '&lt;/span>' +
+								'&lt;span class="circle">' + value.number[5] + '&lt;/span>' +
+								'&lt;span class="circle powerball">' + value.number[6] + '&lt;/span>' +
+								'&lt;/div>' +
+								'&lt;p style="text-align:center;" class="latestNumberDate">' + value.date + '&lt;/p>' +
+								'&lt;/li>';
+					}); // end each	
+				} // end if
 				$('#listview').append(list).listview("refresh");
-			}
-		}
-	});
-}
-
-// the actual registration of the plugin
-$.mobile.listomatic.prototype.registerAjaxCall(getNumber);
+			} // end success
+		}); // end ajax
+	}
+	$.extend($.mobile.listomatic.prototype.options, {perPage: 2, btnLabel: 'Show Me More', refreshContent: 'daily'});
+	$.mobile.listomatic.prototype.registerAjaxCall(getNumber);
+});
 </pre>
+
+
 
 #Server Side Configuration To Enable Pagination
 
