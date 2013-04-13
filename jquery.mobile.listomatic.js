@@ -68,7 +68,7 @@
 			var totalDisplayed = $('ul#listview li').not('li.listomatic').length;
 			if (totalDisplayed < totalAvailable) {
 				$(e).find('li.listomatic').remove();
-				$(e).append('<li class="listomatic" data-theme="c"  data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.btnLabel + '</a></li>')
+				$(e).append('<li class="listomatic" data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.btnLabel + '</a></li>')
 				.listview("refresh");
 			} else {
 				$(e).find('li.listomatic').remove();				
