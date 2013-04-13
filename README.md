@@ -66,32 +66,47 @@ $(document).on("pageinit", function(){
 
 #Server Side Configuration To Enable Pagination
 
-For each Ajax call there will be several paramaters that will need to be hooked on to the sql query on the server side to allow for pagination by only getting a subset of records, one at a time.
+For each Ajax call there will be several paramaters that will need to be hooked on to the sql query on the server side to allow for pagination by only getting a subset of records, one at a time. The following example is written in PHP using MySQL:
 
 <pre>
+error_reporting(0);
+header('Access-Control-Allow-Origin: *');
+$con=mysqli_connect("domain","username","password","database");
+if (mysqli_connect_errno()) {
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
 $perPage    = $_REQUEST['listomatic']['perPage'];
 $listOffset = $_REQUEST['listomatic']['listOffset'];
 $searchTerm = $_REQUEST['listomatic']['searchTerm'];
-
 if ($searchTerm) {
-	$sql = "SELECT * FROM yourTable 
-	WHERE date LIKE '%$searchTerm%' 
-	ORDER BY date DESC LIMIT $listOffset, $perPage";
+	$sql = "SELECT SQL_CALC_FOUND_ROWS *
+			FROM numbers
+			WHERE date LIKE '%$searchTerm%'
+			ORDER BY date DESC
+			LIMIT $listOffset, $perPage";
 	$result = mysqli_query($con, $sql);
 } else {
-	$sql = "SELECT * FROM yourTable 
-	ORDER BY date DESC LIMIT $listOffset, $perPage";
+	$sql = "SELECT SQL_CALC_FOUND_ROWS *
+			FROM numbers
+			ORDER BY date DESC
+			LIMIT $listOffset, $perPage";
 	$result = mysqli_query($con,$sql);
 }
-
+$resultNumRows = mysqli_query($con, 'SELECT FOUND_ROWS() as foundRows');
+$rowFoundRows = mysqli_fetch_array($resultNumRows);
+$iFoundRows = $rowFoundRows['foundRows'];
 while($row = mysqli_fetch_array($result)) {
-	$aData['numbers'][] = array('date' => $row['date'] , 
-				     'number' => array(1 => $row['num1'],
-							2 => $row['num2'],
-							3 => $row['num3'],
-							4 => $row['num4'],
-							5 => $row['num5'],
-							6 => $row['num6']));
+	$sDate = date('m/d/Y', strtotime($row['date']));
+	// Listomatic require the "total" parameter to show/hide "Show More" button
+	$aData['total'] = $iFoundRows; 
+	// The following is sample data (in this case Powerball numbers) that you want to display
+	$aData['numbers'][] = array('date' =>  $sDate,
+	    						'number' => array(1 => $row['num1'],
+													2 => $row['num2'],
+													3 => $row['num3'],
+													4 => $row['num4'],
+													5 => $row['num5'],
+													6 => $row['num6']));
 }
 echo json_encode($aData);
 exit;
