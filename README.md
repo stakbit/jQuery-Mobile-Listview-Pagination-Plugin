@@ -78,26 +78,30 @@ if (mysqli_connect_errno()) {
 $perPage    = $_REQUEST['listomatic']['perPage'];
 $listOffset = $_REQUEST['listomatic']['listOffset'];
 $searchTerm = $_REQUEST['listomatic']['searchTerm'];
+
 if ($searchTerm) {
 	$sql = "SELECT SQL_CALC_FOUND_ROWS *
 			FROM numbers
 			WHERE date LIKE '%$searchTerm%'
 			ORDER BY date DESC
 			LIMIT $listOffset, $perPage";
-	$result = mysqli_query($con, $sql);
 } else {
 	$sql = "SELECT SQL_CALC_FOUND_ROWS *
 			FROM numbers
 			ORDER BY date DESC
 			LIMIT $listOffset, $perPage";
-	$result = mysqli_query($con,$sql);
 }
+$result = mysqli_query($con, $sql);
+
+// If you are using MySQL use SQL_CALC_FOUND_ROWS in your main queries (above)
+// Now to get the total records available use the FOUND_ROWS() function (below)
 $resultNumRows = mysqli_query($con, 'SELECT FOUND_ROWS() as foundRows');
 $rowFoundRows = mysqli_fetch_array($resultNumRows);
 $iFoundRows = $rowFoundRows['foundRows'];
+
 while($row = mysqli_fetch_array($result)) {
 	$sDate = date('m/d/Y', strtotime($row['date']));
-	// Listomatic require the "total" parameter to show/hide "Show More" button
+	// Listomatic requires the "total" field to show/hide the "Show More" button
 	$aData['total'] = $iFoundRows; 
 	// The following is sample data (in this case Powerball numbers) that you want to display
 	$aData['numbers'][] = array('date' =>  $sDate,
@@ -112,7 +116,41 @@ echo json_encode($aData);
 exit;
 </pre>
 
-#Configuration 
+#Response Data in JSON Format
+Listomatic requires a data response in JSON format. The "total" field is required by the plugin to show/hide the "Show More" button. The "Show More" button will be showned if the current records displayed does not exceed the total records available from the server. Otherwise the "Show More" button will be hidden when no additional records are available to be displayed.
+
+The numbers field as shown is the actual data to be put into the list. Pass what ever data you need to be displayed and modify your Ajax function to accept this data.
+<pre>
+{
+   "total":"1599",
+   "numbers":[
+      {
+         "date":"02\/16\/2013",
+         "number":{
+            "1":"58",
+            "2":"16",
+            "3":"15",
+            "4":"46",
+            "5":"50",
+            "6":"29"
+         }
+      },
+      {
+         "date":"02\/13\/2013",
+         "number":{
+            "1":"12",
+            "2":"43",
+            "3":"27",
+            "4":"25",
+            "5":"23",
+            "6":"29"
+         }
+      }
+   ]
+}
+</pre>
+
+#Configuration
 
 The Listomatic plugin will set some default settings that can be overwritten, such as number of records to return per call (perPage), label text for the "Show More" button (btnLabel) and an option to refresh content (refreshContent), if set to 'false' the page will not refresh, if set to 'true' the page will refresh at midnight. 
 
