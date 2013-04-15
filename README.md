@@ -37,7 +37,7 @@ $(document).on("pageinit", function(){
 			url: serviceURL,
 			data: { listomatic: $.mobile.listomatic.prototype.getResults() },
 			success: function(data) {
-				if (data.numbers) {
+				if (data && data.numbers) {
 					var list = '';
 					$.each(data.numbers, function(index, value) {
 						list += '&lt;li data-icon="false" data-filtertext="' + value.date + '">' +
