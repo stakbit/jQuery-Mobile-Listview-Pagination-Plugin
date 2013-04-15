@@ -1,5 +1,5 @@
 /*
- * jQuery Mobile Listomatic Plugin v0.5.1
+ * jQuery Mobile Listomatic Plugin v0.5.2
  * Plugin to provide jquery mobile listview pagination
  * Copyright (c) Stakbit.com
  * Released under the MIT license.
