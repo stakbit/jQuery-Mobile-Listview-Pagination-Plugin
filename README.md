@@ -155,7 +155,11 @@ The numbers field as shown is the actual data to be put into the list. Pass what
 The Listomatic plugin will set some default settings that can be overwritten, such as number of records to return per call (perPage), label text for the "Show More" button (btnLabel) and an option to refresh content (refreshContent), if set to 'false' the page will not refresh, if set to 'true' the page will refresh at midnight. 
 
 <pre>
-$.extend($.mobile.listomatic.prototype.options, {perPage: 5, btnLabel: 'Show Me More', refreshContent: true});
+$.extend($.mobile.listomatic.prototype.options, {perPage: 2, 
+													btnLabel: 'Show Me More', 
+													refreshContent: 'daily',
+													noResultsFound: 'No Results Found'
+													});
 </pre>
 
 # License
