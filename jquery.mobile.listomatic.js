@@ -12,6 +12,7 @@
 			perPage: 10,
 			btnLabel: 'Show More',
 			refreshContent: false,
+			noResultsFound: 'No Results Found',
 			initSelector: "[data-listomatic],[data-type=search]"
 		},
 		_create: function(e) {
@@ -53,7 +54,7 @@
 						self._resetOffsetSearch();
 						$datalistomatic.empty();
 						$.when(a = self._getAjaxCall()())
-						.then(function(){ 
+						.then(function(){
 							self._moreBtn($datalistomatic);
 						});
 					} else {
@@ -64,15 +65,22 @@
 		},
 		_moreBtn: function(e) {
 			var aResp = $.parseJSON(a.responseText);
-			var totalAvailable = aResp.total;
-			var totalDisplayed = $('ul#listview li').not('li.listomatic').length;
-			if (totalDisplayed < totalAvailable) {
-				$(e).find('li.listomatic').remove();
-				$(e).append('<li class="listomatic" data-theme="c"  data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.btnLabel + '</a></li>')
-				.listview("refresh");
-			} else {
-				$(e).find('li.listomatic').remove();				
+			if (aResp) {
+				var totalAvailable = aResp.total;
+				var totalDisplayed = $('ul#listview li').not('li.listomatic').length;
+				if (totalDisplayed < totalAvailable) {
+					$(e).find('li.listomatic').remove();
+					$(e).append('<li class="listomatic" data-theme="c"  data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.btnLabel + '</a></li>')
+					.listview("refresh");
+				} else {
+					$(e).find('li.listomatic').remove();				
+				}
 			}
+			else {
+				$(e).find('li.listomaticRemove').remove();
+				$(e).append('<li class="listomaticRemove" data-theme="c"  data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.noResultsFound + '</a></li>')
+					.listview("refresh");				
+			} 
 		},
 		_refreshAt: function (hours, minutes, seconds) {
 			var now = new Date();
@@ -89,7 +97,7 @@
 			setTimeout(function() { window.location.reload(true); }, timeout);
 		},
 		_setSearchTerm: function(t) {
-			searchTerm = t;
+			searchTerm = $.trim(t);
 		},
 		_getSearchTerm: function() {
 			return searchTerm;
