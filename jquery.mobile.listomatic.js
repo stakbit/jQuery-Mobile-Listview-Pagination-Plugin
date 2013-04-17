@@ -68,7 +68,6 @@
 			if (aResp) {
 				var totalAvailable = aResp.total;
 				var totalDisplayed = $('li', e).not('li.listomatic').length;
-				console.log(totalDisplayed);
 				if (totalDisplayed < totalAvailable) {
 					$(e).find('li.listomatic').remove();
 					$(e).append('<li class="listomatic" data-theme="c" data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.btnLabel + '</a></li>')
