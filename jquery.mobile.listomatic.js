@@ -1,5 +1,5 @@
 /*
- * jQuery Mobile Listomatic Plugin v0.5.2
+ * jQuery Mobile Listomatic Plugin v0.5.3
  * Plugin to provide jquery mobile listview pagination
  * Copyright (c) Stakbit.com
  * Released under the MIT license.
@@ -21,13 +21,13 @@
 				self._refreshAt(00, 00, 00); // refresh at midnight - refreshAt(15,35,0); Will refresh the page at 3:35pm
 			}
 			if ($(this.element).is('[data-listomatic]')) {
-				$.when( a = self._getAjaxCall()() )
+				$.when(a = self._getAjaxCall()())
 				.then(function(){ 
 					self._moreBtn(self.element);
 					cachedList = $('[data-listomatic]').html();	
 				});
 				this.element.click(function(e){
-					if ($(e.target).closest('li.listomatic').length >0 ) {
+					if ($(e.target).closest('li.listomatic').length > 0) {
 						if (self._hasSearchTerm()) {
 							self._setOffsetSearch();
 						} else {
@@ -67,20 +67,21 @@
 			var aResp = $.parseJSON(a.responseText);
 			if (aResp) {
 				var totalAvailable = aResp.total;
-				var totalDisplayed = $('ul#listview li').not('li.listomatic').length;
+				var totalDisplayed = $('li', e).not('li.listomatic').length;
+				console.log(totalDisplayed);
 				if (totalDisplayed < totalAvailable) {
 					$(e).find('li.listomatic').remove();
-					$(e).append('<li class="listomatic" data-theme="c"  data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.btnLabel + '</a></li>')
+					$(e).append('<li class="listomatic" data-theme="c" data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.btnLabel + '</a></li>')
 					.listview("refresh");
 				} else {
-					$(e).find('li.listomatic').remove();				
+					$(e).find('li.listomatic').remove();
 				}
 			}
 			else {
 				$(e).find('li.listomaticRemove').remove();
-				$(e).append('<li class="listomaticRemove" data-theme="c"  data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.noResultsFound + '</a></li>')
-					.listview("refresh");				
-			} 
+				$(e).append('<li class="listomaticRemove" data-theme="c" data-icon="false" ><a style="height: 1.5em; font-size:1.5em;; text-align:center;" href="#" data-role="button">' +  this.options.noResultsFound + '</a></li>')
+				.listview("refresh");
+			}
 		},
 		_refreshAt: function (hours, minutes, seconds) {
 			var now = new Date();
