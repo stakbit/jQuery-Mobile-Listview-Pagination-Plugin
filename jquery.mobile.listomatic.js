@@ -4,6 +4,7 @@
  * Copyright (c) Stakbit.com
  * Released under the MIT license.
  * http://listomatic.stakbit.com
+ * **
  */
 (function($) {
 	var a, listOffset = 0, listOffsetSearch = 0, registeredAjax, registeredAjaxContext, searchTerm, cachedList;
