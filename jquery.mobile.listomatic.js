@@ -4,9 +4,10 @@
  * Copyright (c) Stakbit.com
  * Released under the MIT license.
  * http://listomatic.stakbit.com
+ * **
  */
 (function($) {
-	var a, listOffset = 0, listOffsetSearch = 0, registeredAjax, searchTerm, cachedList;
+	var a, listOffset = 0, listOffsetSearch = 0, registeredAjax, registeredAjaxContext, searchTerm, cachedList;
 	$.widget( "mobile.listomatic", $.mobile.widget, {
 		options: {
 			perPage: 10,
@@ -21,7 +22,7 @@
 				self._refreshAt(00, 00, 00); // refresh at midnight - refreshAt(15,35,0); Will refresh the page at 3:35pm
 			}
 			if ($(this.element).is('[data-listomatic]')) {
-				$.when(a = self._getAjaxCall()())
+				$.when(a = self._invokeAjaxCall())
 				.then(function(){ 
 					self._moreBtn(self.element);
 					cachedList = $('[data-listomatic]').html();	
@@ -33,7 +34,7 @@
 						} else {
 							self._setOffset();
 						}
-						$.when(a = self._getAjaxCall()())
+						$.when(a = self._invokeAjaxCall())
 						.then(function(){
 							self._moreBtn(self.element);
 							if (!self._hasSearchTerm()) {
@@ -53,7 +54,7 @@
 					if (self._hasSearchTerm()) {
 						self._resetOffsetSearch();
 						$datalistomatic.empty();
-						$.when(a = self._getAjaxCall()())
+						$.when(a = self._invokeAjaxCall())
 						.then(function(){
 							self._moreBtn($datalistomatic);
 						});
@@ -143,8 +144,17 @@
 		_resetOffsetSearch: function() {
 			listOffsetSearch = 0;
  		},
-		registerAjaxCall: function(f) {
+		registerAjaxCall: function(f, context) {
 			registeredAjax = f;
+			registeredAjaxContext = context;
+		},
+		_invokeAjaxCall: function() {
+			var ajaxCallback = _getAjaxCall();
+			if(registeredAjaxContext) {
+				ajaxCallback.call(registeredAjaxContext);
+			} else {
+				ajaxCallback.call();
+			}
 		},
 		_getAjaxCall: function() {
 			return registeredAjax;
