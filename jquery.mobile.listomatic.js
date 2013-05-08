@@ -1,10 +1,9 @@
 /*
- * jQuery Mobile Listomatic Plugin v0.5.3
+ * jQuery Mobile Listomatic Plugin v0.5.3 RC1
  * Plugin to provide jquery mobile listview pagination
  * Copyright (c) Stakbit.com
  * Released under the MIT license.
  * http://listomatic.stakbit.com
- * **
  */
 (function($) {
 	var a, listOffset = 0, listOffsetSearch = 0, registeredAjax, registeredAjaxContext, searchTerm, cachedList;
@@ -64,8 +63,8 @@
 				});
 			}
 		},
-		_isValidList: function(e) {
-			return $(e).is('[data-listomatic]');
+		_isValidList: function(listDOMRef) {
+			return $(listDOMRef).is('[data-listomatic]');
 		},
 		_moreBtn: function(e) {
 			var aResp = $.parseJSON(a.responseText);
@@ -154,9 +153,9 @@
 		_invokeAjaxCall: function() {
 			var ajaxCallback = this._getAjaxCall();
 			if(registeredAjaxContext) {
-				ajaxCallback.call(registeredAjaxContext);
+				return ajaxCallback.call(registeredAjaxContext);
 			} else {
-				ajaxCallback.call();
+				return ajaxCallback.call();
 			}
 		},
 		_getAjaxCall: function() {
@@ -176,7 +175,7 @@
 			}
 		}
 	});
-	$(document).on( "pageinit", function(e){
+	$(document).on( "pageinit", function(e) {
 		$.mobile.listomatic.prototype.enhanceWithin(e.target, true);
 	});
 })(jQuery);
