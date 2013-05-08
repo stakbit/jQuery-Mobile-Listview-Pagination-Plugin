@@ -21,7 +21,7 @@
 			if (this.options.refreshContent) {
 				self._refreshAt(00, 00, 00); // refresh at midnight - refreshAt(15,35,0); Will refresh the page at 3:35pm
 			}
-			if ($(this.element).is('[data-listomatic]')) {
+			if (this._isValidList(this.element)) {
 				self.refreshList();
 				this.element.click(function(e){
 					if ($(e.target).closest('li.listomatic').length > 0) {
@@ -54,10 +54,10 @@
 		refreshList: function(listDOMRef) {
 			var self = this;
 			if(!listDOMRef) listDOMRef = this.element;
-			if(self._isValidList(listDOMRef)) {
-				$.when(a = self._invokeAjaxCall())
-				.then(function(){
-					_moreBtn(listDOMRef);
+			if(this._isValidList(listDOMRef)) {
+				$.when(a = this._invokeAjaxCall())
+				.then(function() {
+					self._moreBtn(listDOMRef);
 					if (!self._hasSearchTerm()) {
 						cachedList = $(listDOMRef).html();
 					}
@@ -65,7 +65,7 @@
 			}
 		},
 		_isValidList: function(e) {
-			return $(e).is('[data-listomatic]')
+			return $(e).is('[data-listomatic]');
 		},
 		_moreBtn: function(e) {
 			var aResp = $.parseJSON(a.responseText);
@@ -152,7 +152,7 @@
 			registeredAjaxContext = context;
 		},
 		_invokeAjaxCall: function() {
-			var ajaxCallback = _getAjaxCall();
+			var ajaxCallback = this._getAjaxCall();
 			if(registeredAjaxContext) {
 				ajaxCallback.call(registeredAjaxContext);
 			} else {
