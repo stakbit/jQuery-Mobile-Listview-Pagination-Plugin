@@ -1,7 +1,5 @@
 # jQuery Mobile Listview Pagination Plugin (aptly named  Listomatic)
 
-Plugin to provide jquery mobile listview pagination. Try the demo at http://listomatic.stakbit.com/
-
 ## Requirements
 
 Works on jQuery Mobile 1.3.0 (grab the latest copy at http://jquerymobile.com), though might work with older versions - never tested with old versions
