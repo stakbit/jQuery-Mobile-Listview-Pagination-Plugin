@@ -1,10 +1,9 @@
 /*
- * jQuery Mobile Listomatic Plugin v0.5.3
+ * jQuery Mobile Listomatic Plugin v0.5.3 RC1
  * Plugin to provide jquery mobile listview pagination
  * Copyright (c) Stakbit.com
  * Released under the MIT license.
  * http://listomatic.stakbit.com
- * **
  */
 (function($) {
 	var a, listOffset = 0, listOffsetSearch = 0, registeredAjax, registeredAjaxContext, searchTerm, cachedList;
@@ -21,12 +20,8 @@
 			if (this.options.refreshContent) {
 				self._refreshAt(00, 00, 00); // refresh at midnight - refreshAt(15,35,0); Will refresh the page at 3:35pm
 			}
-			if ($(this.element).is('[data-listomatic]')) {
-				$.when(a = self._invokeAjaxCall())
-				.then(function(){ 
-					self._moreBtn(self.element);
-					cachedList = $('[data-listomatic]').html();	
-				});
+			if (this._isValidList(this.element)) {
+				self.refreshList();
 				this.element.click(function(e){
 					if ($(e.target).closest('li.listomatic').length > 0) {
 						if (self._hasSearchTerm()) {
@@ -34,13 +29,7 @@
 						} else {
 							self._setOffset();
 						}
-						$.when(a = self._invokeAjaxCall())
-						.then(function(){
-							self._moreBtn(self.element);
-							if (!self._hasSearchTerm()) {
-								cachedList = $('[data-listomatic]').html();
-							}
-						});
+						self.refreshList();
 					} 
 				});	
 			} else if ($(this.element).is('[data-type=search]')) {
@@ -54,15 +43,28 @@
 					if (self._hasSearchTerm()) {
 						self._resetOffsetSearch();
 						$datalistomatic.empty();
-						$.when(a = self._invokeAjaxCall())
-						.then(function(){
-							self._moreBtn($datalistomatic);
-						});
+						self.refreshList($datalistomatic.get(0));
 					} else {
 						self._resetSearchView($datalistomatic);
 					}
 				});
 			}
+		},
+		refreshList: function(listDOMRef) {
+			var self = this;
+			if(!listDOMRef) listDOMRef = this.element;
+			if(this._isValidList(listDOMRef)) {
+				$.when(a = this._invokeAjaxCall())
+				.then(function() {
+					self._moreBtn(listDOMRef);
+					if (!self._hasSearchTerm()) {
+						cachedList = $(listDOMRef).html();
+					}
+				});
+			}
+		},
+		_isValidList: function(listDOMRef) {
+			return $(listDOMRef).is('[data-listomatic]');
 		},
 		_moreBtn: function(e) {
 			var aResp = $.parseJSON(a.responseText);
@@ -149,11 +151,11 @@
 			registeredAjaxContext = context;
 		},
 		_invokeAjaxCall: function() {
-			var ajaxCallback = _getAjaxCall();
+			var ajaxCallback = this._getAjaxCall();
 			if(registeredAjaxContext) {
-				ajaxCallback.call(registeredAjaxContext);
+				return ajaxCallback.call(registeredAjaxContext);
 			} else {
-				ajaxCallback.call();
+				return ajaxCallback.call();
 			}
 		},
 		_getAjaxCall: function() {
@@ -173,7 +175,7 @@
 			}
 		}
 	});
-	$(document).on( "pageinit", function(e){
+	$(document).on( "pageinit", function(e) {
 		$.mobile.listomatic.prototype.enhanceWithin(e.target, true);
 	});
 })(jQuery);
